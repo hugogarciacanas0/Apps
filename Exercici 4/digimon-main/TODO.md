@@ -1,0 +1,6 @@
+- [x] Add onDigimonUpdated callback to DigimonList
+- [x] Pass callback from main.dart to DigimonList
+- [x] Add onDigimonUpdated to DigimonCard
+- [x] Update DigimonCard to await navigation and call callback
+- [x] Initialize slider with current rating in DigimonDetailPage
+- [x] Pop after updating rating in DigimonDetailPage
