@@ -22,6 +22,7 @@ class _DigimonDetailPageState extends State<DigimonDetailPage> {
     _sliderValue = widget.digimon.rating.toDouble();
   }
 
+  // Widget per la secció de puntuació
   Widget get addYourRating {
     return Column(
       children: <Widget>[
@@ -39,7 +40,7 @@ class _DigimonDetailPageState extends State<DigimonDetailPage> {
                   value: _sliderValue,
                   onChanged: (newRating) {
                     setState(() {
-                      _sliderValue = newRating;
+                      _sliderValue = newRating; // Actualitza el valor
                     });
                   },
                 ),
@@ -48,52 +49,56 @@ class _DigimonDetailPageState extends State<DigimonDetailPage> {
                   width: 50.0,
                   alignment: Alignment.center,
                   child: Text(
-                    '${_sliderValue.toInt()}',
+                    '${_sliderValue.toInt()}', // Mostra el valor
                     style: const TextStyle(color: Colors.black, fontSize: 25.0),
                   )),
             ],
           ),
         ),
-        submitRatingButton,
+        submitRatingButton, // Botó per enviar
       ],
     );
   }
 
+  // Mètode per actualitzar la puntuació
   void updateRating() {
     if (_sliderValue < 5) {
-      _ratingErrorDialog();
+      _ratingErrorDialog(); // Mostra diàleg d'error si és baixa
     } else {
       setState(() {
-        widget.digimon.rating = _sliderValue.toInt();
+        widget.digimon.rating = _sliderValue.toInt(); // Actualitza la puntuació
       });
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(); // Torna a la pàgina anterior
     }
   }
 
+  // Diàleg d'error per puntuacions baixes
   Future<void> _ratingErrorDialog() async {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error!'),
-            content: const Text("Come on! They're good!"),
+            content: const Text("Come on! They're good!"), // Missatge d'error
             actions: <Widget>[
               TextButton(
                 child: const Text('Try Again'),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(), // Tanca el diàleg
               )
             ],
           );
         });
   }
 
+  // Widget per el botó d'enviar puntuació
   Widget get submitRatingButton {
     return ElevatedButton(
-      onPressed: () => updateRating(),
+      onPressed: () => updateRating(), // Crida a actualitzar
       child: const Text('Submit'),
     );
   }
 
+  // Widget per la imatge del Digimon
   Widget get digimonImage {
     return Hero(
       tag: widget.digimon,
@@ -108,11 +113,12 @@ class _DigimonDetailPageState extends State<DigimonDetailPage> {
               BoxShadow(offset: Offset(2.0, 1.0), blurRadius: 3.0, spreadRadius: 0.0, color: Color(0x24000000)),
               BoxShadow(offset: Offset(3.0, 1.0), blurRadius: 4.0, spreadRadius: 2.0, color: Color(0x1f000000))
             ],
-            image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(widget.digimon.imageUrl ?? ""))),
+            image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(widget.digimon.imageUrl ?? ""))), // Imatge de xarxa
       ),
     );
   }
 
+  // Widget per mostrar la puntuació actual
   Widget get rating {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -122,26 +128,26 @@ class _DigimonDetailPageState extends State<DigimonDetailPage> {
           size: 40.0,
           color: Colors.black,
         ),
-        Text('${widget.digimon.rating}/10', style: const TextStyle(color: Colors.black, fontSize: 30.0))
+        Text('${widget.digimon.rating}/10', style: const TextStyle(color: Colors.black, fontSize: 30.0)) // Mostra la puntuació
       ],
     );
   }
 
+  // Widget per el perfil del Digimon
   Widget get digimonProfile {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 32.0),
       decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 161, 219, 193),
+        color: Color.fromARGB(255, 161, 219, 193), // Color de fons
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          digimonImage,
-          Text(widget.digimon.name, style: const TextStyle(color: Colors.black, fontSize: 32.0)),
-          Text('${widget.digimon.levelDigimon}', style: const TextStyle(color: Colors.black, fontSize: 20.0)),
+          digimonImage, // Imatge del Digimon
+          Text(widget.digimon.name, style: const TextStyle(color: Colors.black, fontSize: 32.0)), // Nom
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
-            child: rating,
+            child: rating, // Puntuació
           ),
         ],
       ),
@@ -150,6 +156,7 @@ class _DigimonDetailPageState extends State<DigimonDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Construeix la interfície de la pàgina de detalls
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF8F8F8),
@@ -157,9 +164,9 @@ class _DigimonDetailPageState extends State<DigimonDetailPage> {
       ),
       backgroundColor:  const Color.fromARGB(255, 161, 219, 193),
       body: ListView(
-        children: <Widget>[digimonProfile, addYourRating],
+        children: <Widget>[digimonProfile, addYourRating], // Mostra perfil i puntuació
       ),
-      
+
     );
   }
 }

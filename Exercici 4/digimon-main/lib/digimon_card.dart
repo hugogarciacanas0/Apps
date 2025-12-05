@@ -2,10 +2,9 @@ import 'package:digimon/digimon_model.dart';
 import 'digimon_detail_page.dart';
 import 'package:flutter/material.dart';
 
-
 class DigimonCard extends StatefulWidget {
-  final Digimon digimon;
-  final VoidCallback? onDigimonUpdated;
+  final Digimon digimon; // L'objecte Digimon que es mostrarà
+  final VoidCallback? onDigimonUpdated; 
 
   const DigimonCard(this.digimon, {super.key, this.onDigimonUpdated});
 
@@ -15,21 +14,23 @@ class DigimonCard extends StatefulWidget {
 }
 
 class _DigimonCardState extends State<DigimonCard> {
-  Digimon digimon;
-  String? renderUrl;
-  final VoidCallback? onDigimonUpdated;
+  Digimon digimon; // Referència al Digimon actual
+  String? renderUrl; // URL de la imatge del Digimon (pot ser null)
+  final VoidCallback? onDigimonUpdated; // Callback per notificar actualitzacions
 
   _DigimonCardState(this.digimon, this.onDigimonUpdated);
 
   @override
   void initState() {
     super.initState();
-    renderDigimonPic();
+    renderDigimonPic(); // Carrega la imatge del Digimon quan s'inicialitza el widget
   }
 
+  // Widget que retorna la imatge del Digimon amb animació
   Widget get digimonImage {
+    // Hero widget per a animacions de transició entre pantalles
     var digimonAvatar = Hero(
-      tag: digimon,
+      tag: digimon, // Tag únic per identificar el Hero en les transicions
       child: Container(
         width: 100.0,
         height: 100.0,
@@ -38,6 +39,7 @@ class _DigimonCardState extends State<DigimonCard> {
       ),
     );
 
+    // Placeholder que es mostra mentre es carrega la imatge
     var placeholder = Container(
       width: 100.0,
       height: 100.0,
@@ -52,45 +54,50 @@ class _DigimonCardState extends State<DigimonCard> {
       ),
     );
 
+    // Animació que fa el placeholder i la imatge real
     var crossFade = AnimatedCrossFade(
-      firstChild: placeholder,
-      secondChild: digimonAvatar,
+      firstChild: placeholder, // Primer widget (placeholder)
+      secondChild: digimonAvatar, // Segon widget (imatge del Digimon)
       // ignore: unnecessary_null_comparison
-      crossFadeState: renderUrl == null ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-      duration: const Duration(milliseconds: 1000),
+      crossFadeState: renderUrl == null ? CrossFadeState.showFirst : CrossFadeState.showSecond, // Decideix quin widget mostrar
+      duration: const Duration(milliseconds: 1000), // Durada de l'animació
     );
 
     return crossFade;
   }
 
+  // Funció asíncrona que obté i renderitza la URL de la imatge del Digimon
   void renderDigimonPic() async {
-    await digimon.getImageUrl();
-    if (mounted) {
+    await digimon.getImageUrl(); // Crida asíncrona per obtenir la URL de la imatge
+    if (mounted) { // Comprova que el widget encara està muntat abans d'actualitzar l'estat
       setState(() {
-        renderUrl = digimon.imageUrl;
+        renderUrl = digimon.imageUrl; // Actualitza la URL i força un rebuild
       });
     }
   }
 
+  // Widget que retorna  la targeta principal amb la informació del Digimon
   Widget get digimonCard {
     return Positioned(
-      right: 0.0,
+      right: 0.0, // Posiciona la targeta a la dreta
       child: SizedBox(
         width: 290,
         height: 115,
         child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-          color: const Color(0xFFF8F8F8),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)), // Vores arrodonides
+          color: const Color(0xFFF8F8F8), // Color de fons de la targeta
           child: Padding(
-            padding: const EdgeInsets.only(top: 8, bottom: 8, left: 34),
+            padding: const EdgeInsets.only(top: 8, bottom: 8, left: 34), // Padding per deixar espai per a la imatge
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
+                // Nom del Digimon
                 Text(
                   widget.digimon.name,
                   style: const TextStyle(color: Color.fromARGB(255, 16, 88, 55), fontSize: 27.0, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
                 ),
+                // Puntuació del Digimon amb icona d'estrella
                 Row(
                   children: <Widget>[
                     const Icon(Icons.star, color: Color.fromARGB(255, 16, 88, 55)),
@@ -105,25 +112,27 @@ class _DigimonCardState extends State<DigimonCard> {
     );
   }
 
+  // Funció asíncrona que navega a la pàgina de detall del Digimon
   showDigimonDetailPage() async {
     await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return DigimonDetailPage(digimon);
+      return DigimonDetailPage(digimon); // Crea i mostra la pàgina de detall
     }));
-    onDigimonUpdated?.call();
+    onDigimonUpdated?.call(); // Crida el callback si existeix després de tornar
   }
 
   @override
   Widget build(BuildContext context) {
+    // InkWell fa que tota la targeta sigui clicable amb efecte d'ona
     return InkWell(
-      onTap: () => showDigimonDetailPage(),
+      onTap: () => showDigimonDetailPage(), // Acció quan es toca la targeta
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: SizedBox(
           height: 115.0,
-          child: Stack(
+          child: Stack( // Stack per superposar la imatge sobre la targeta
             children: <Widget>[
-              digimonCard,
-              Positioned(top: 7.5, child: digimonImage),
+              digimonCard, // Targeta de fons amb la informació
+              Positioned(top: 7.5, child: digimonImage), // Imatge posicionada a l'esquerra
             ],
           ),
         ),

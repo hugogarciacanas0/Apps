@@ -9,15 +9,17 @@ class DigimonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildList(context);
+    return _buildList(context); // Construeix la llista
   }
 
+  // Mètode privat per construir la ListView
   ListView _buildList(context) {
     return ListView.builder(
-      itemCount: digimons.length,
+      itemCount: digimons.length, // Nombre d'elements
       // ignore: avoid_types_as_parameter_names
       itemBuilder: (context, int) {
-        return DigimonCard(digimons[int], onDigimonUpdated: onDigimonUpdated);
+        return DigimonCard(digimons[int],
+            onDigimonUpdated: onDigimonUpdated); // Crea cada targeta
       },
     );
   }
